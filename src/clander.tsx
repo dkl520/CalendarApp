@@ -1,5 +1,5 @@
 // Calendar.tsx
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScheduleXCalendar, useCalendarApp } from "@schedule-x/react";
 import { createViewWeek, createViewMonthGrid } from '@schedule-x/calendar';
 import '@schedule-x/theme-default/dist/calendar.css';
@@ -20,7 +20,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 
 const Calendar: React.FC = () => {
-     const [value, setValue] = useState(0);
+    // const [value, setValue] = useState(0);
+    const [value] = useState(0);
     const [showDialog, setShowDialog] = useState(false);
     const eventsService = useState(() => createEventsServicePlugin())[0];
     const navigate = useNavigate();  // 获取导航方法
@@ -58,79 +59,80 @@ const Calendar: React.FC = () => {
 
     return (
         <>
-        < Container maxWidth="lg" >
-            <div style={{ position: 'relative' }}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => navigate('/timer')}  // 点击后跳转到 Timer 页面
-                    style={{
-                        backgroundColor: "#F1F3F4",
-                        color: "#000",
-                        fontWeight: "bold",
-                        boxShadow: "none",
-                        marginRight: "10px"
-                    }}
-                >
-                    Go to Timer
-                </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => navigate('/todolist')}  // 点击后跳转到 Timer 页面
-                    style={{
-                        backgroundColor: "#F1F3F4",
-                        color: "#000",
-                        fontWeight: "bold",
-                        boxShadow: "none",
-                        marginRight: "10px"
-                    }}
-                >
-                    Go to TodoList
-                </Button>            
+            < Container maxWidth="lg" >
+                <div style={{ position: 'relative' }}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => navigate('/timer')}  // 点击后跳转到 Timer 页面
+                        style={{
+                            backgroundColor: "#F1F3F4",
+                            color: "#000",
+                            fontWeight: "bold",
+                            boxShadow: "none",
+                            marginRight: "10px"
+                        }}
+                    >
+                        Go to Timer
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => navigate('/todolist')}  // 点击后跳转到 Timer 页面
+                        style={{
+                            backgroundColor: "#F1F3F4",
+                            color: "#000",
+                            fontWeight: "bold",
+                            boxShadow: "none",
+                            marginRight: "10px"
+                        }}
+                    >
+                        Go to TodoList
+                    </Button>
 
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => setShowDialog(true)}
-                    style={{
-                        backgroundColor: "#F1F3F4",
-                        color: "#000",
-                        fontWeight: "bold",
-                        boxShadow: "none",
-                        marginRight: "10px"
-                    }}
-                >
-                    ADD
-                </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => setShowDialog(true)}
+                        style={{
+                            backgroundColor: "#F1F3F4",
+                            color: "#000",
+                            fontWeight: "bold",
+                            boxShadow: "none",
+                            marginRight: "10px"
+                        }}
+                    >
+                        ADD
+                    </Button>
 
-                {showDialog && (
-                    <div style={{
-                        position: 'absolute',
-                        zIndex: 1000,
-                        top: '20px',
-                    }}>
-                        <EventDialog
-                            onSave={handleSave}
-                            onCancel={() => setShowDialog(false)}
-                        />
-                    </div>
-                )}
+                    {showDialog && (
+                        <div style={{
+                            position: 'absolute',
+                            zIndex: 1000,
+                            top: '20px',
+                        }}>
+                            <EventDialog
+                                onSave={handleSave}
+                                onCancel={() => setShowDialog(false)}
+                            />
+                        </div>
+                    )}
 
-                <ScheduleXCalendar calendarApp={calendar} />
-            </div>
-        </Container >
-         <BottomNavigation
-         showLabels
-         value={value}
-         onChange={(event, newValue) => setValue(newValue)}
-         sx={{ position: 'fixed', bottom: 0, width: '100%' }}
-       >
-         <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
-         <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
-         <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
-       </BottomNavigation>
-       </>
+                    {calendar && <ScheduleXCalendar calendarApp={calendar} />}
+                </div>
+            </Container >
+            <BottomNavigation
+                showLabels
+                value={value}
+                // onChange={(event, newValue) => setValue(newValue)}
+                // onChange={(event, newValue) => setValue(newValue)}
+                sx={{ position: 'fixed', bottom: 0, width: '100%' }}
+            >
+                <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
+                <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
+                <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
+            </BottomNavigation>
+        </>
     );
 };
 
