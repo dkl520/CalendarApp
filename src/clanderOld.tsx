@@ -7,10 +7,11 @@ import { createEventModalPlugin } from '@schedule-x/event-modal';
 import { createDragAndDropPlugin } from '@schedule-x/drag-and-drop';
 import { createEventsServicePlugin } from '@schedule-x/events-service';
 import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
+import EventDialog from './EventDialog';
 import { useNavigate } from 'react-router-dom';
 
-// import { AppBar } from '@mui/material';
-import AppBar from './Appbar'
+
 
 const Calendar: React.FC = () => {
     // const [value, setValue] = useState(0);
@@ -51,17 +52,54 @@ const Calendar: React.FC = () => {
     }, [eventsService]);
 
     return (
-        <div className=' min-h-screen bg-gradient-to-r from-purple-100 via-pink-50 to-indigo-100'>
-
+        <>
             < Container maxWidth="lg" >
                 <div style={{ position: 'relative' }}>
 
-                    <AppBar />
+
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => setShowDialog(true)}
+                        style={{
+                            backgroundColor: "#F1F3F4",
+                            color: "#000",
+                            fontWeight: "bold",
+                            boxShadow: "none",
+                            marginRight: "10px"
+                        }}
+                    >
+                        ADD
+                    </Button>
+
+                    {showDialog && (
+                        <div style={{
+                            position: 'absolute',
+                            zIndex: 1000,
+                            top: '20px',
+                        }}>
+                            <EventDialog
+                                onSave={handleSave}
+                                onCancel={() => setShowDialog(false)}
+                            />
+                        </div>
+                    )}
+
                     {calendar && <ScheduleXCalendar calendarApp={calendar} />}
                 </div>
             </Container >
-
-        </div>
+            {/* <BottomNavigation
+                showLabels
+                value={value}
+                // onChange={(event, newValue) => setValue(newValue)}
+                // onChange={(event, newValue) => setValue(newValue)}
+                sx={{ position: 'fixed', bottom: 0, width: '100%' }}
+            >
+                <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
+                <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
+                <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
+            </BottomNavigation> */}
+        </>
     );
 };
 
