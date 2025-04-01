@@ -20,7 +20,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 
 const Calendar: React.FC = () => {
-    const [value, setValue] = useState(0);
+     const [value, setValue] = useState(0);
     const [showDialog, setShowDialog] = useState(false);
     const eventsService = useState(() => createEventsServicePlugin())[0];
     const navigate = useNavigate();  // 获取导航方法
@@ -74,7 +74,20 @@ const Calendar: React.FC = () => {
                 >
                     Go to Timer
                 </Button>
-
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => navigate('/todolist')}  // 点击后跳转到 Timer 页面
+                    style={{
+                        backgroundColor: "#F1F3F4",
+                        color: "#000",
+                        fontWeight: "bold",
+                        boxShadow: "none",
+                        marginRight: "10px"
+                    }}
+                >
+                    Go to TodoList
+                </Button>            
 
                 <Button
                     variant="contained"
