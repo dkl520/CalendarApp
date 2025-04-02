@@ -49,16 +49,17 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ data, onChange, expanded,
 
   return (
     <Accordion expanded={expanded === data.id} onChange={() => onExpand(data.id)}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />} color="secondary">
         <Typography variant="subtitle1" fontWeight={expanded === data.id ? 'bold' : 'normal'}>
           {data.title || 'New Item'}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Box component="form" noValidate>
+        <Box component="form" noValidate color="secondary">
           <Stack spacing={2}>
             <TextField
               fullWidth
+              color="secondary"
               label="Title"
               value={data.title}
               onChange={handleChange('title')}
@@ -67,16 +68,24 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ data, onChange, expanded,
             />
             <TextField
               fullWidth
+              color="secondary"
               label="Time"
               type="datetime-local"
               value={data.time || ""}
-              // value={data.time || ""}  // 确保为空字符串
-              onChange={handleChange('time')}
+              onChange={handleChange("time")}
               variant="outlined"
               InputLabelProps={{ shrink: true }}
               disabled={!isEditing}
+              sx={{
+                "& input": {
+                  accentColor: "#8a2be2", // 这里设置为紫色（你可以换成别的颜色）
+                },
+              }}
             />
+
+
             <TextField
+              color="secondary"
               fullWidth
               label="Description"
               value={data.description}
@@ -86,13 +95,14 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ data, onChange, expanded,
               variant="outlined"
               disabled={!isEditing}
             />
-            <FormControl fullWidth variant="outlined" disabled={!isEditing}>
+            <FormControl fullWidth variant="outlined" disabled={!isEditing} color="secondary">
               <InputLabel id={`frequency-label-${data.id}`}>Frequency</InputLabel>
               <Select
                 labelId={`frequency-label-${data.id}`}
                 value={data.frequency}
                 onChange={handleChange('frequency')}
                 label="Frequency"
+                color="secondary"
               >
                 {frequencyOptions.map((option) => (
                   <MenuItem key={option.value} value={option.value}>

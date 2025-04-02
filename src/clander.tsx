@@ -7,21 +7,21 @@ import { createEventModalPlugin } from '@schedule-x/event-modal';
 import { createDragAndDropPlugin } from '@schedule-x/drag-and-drop';
 import { createEventsServicePlugin } from '@schedule-x/events-service';
 import Container from '@mui/material/Container';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 // import { AppBar } from '@mui/material';
-import AppBar from './Appbar'
+import MenuBar from './MenuBar'
 
 const Calendar: React.FC = () => {
     // const [value, setValue] = useState(0);
-    const [value] = useState(0);
-    const [showDialog, setShowDialog] = useState(false);
+    // const [value] = useState(0);
+    // const [showDialog, setShowDialog] = useState(false);
     const eventsService = useState(() => createEventsServicePlugin())[0];
-    const navigate = useNavigate();  // 获取导航方法
-    const handleSave = (eventData: any) => {
-        console.log('Saved event:', eventData);
-        setShowDialog(false);
-    };
+    // const navigate = useNavigate();  // 获取导航方法
+    // const handleSave = (eventData: any) => {
+    //     console.log('Saved event:', eventData);
+    //     setShowDialog(false);
+    // };
 
     const calendar = useCalendarApp({
         views: [
@@ -56,7 +56,7 @@ const Calendar: React.FC = () => {
             < Container maxWidth="lg" >
                 <div style={{ position: 'relative' }}>
 
-                    <AppBar />
+                    <MenuBar />
                     {calendar && <ScheduleXCalendar calendarApp={calendar} />}
                 </div>
             </Container >
