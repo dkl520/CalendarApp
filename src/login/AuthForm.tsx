@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { Typography, Link } from "@mui/material";
 interface AuthFormProps {
     title: string;
@@ -11,7 +11,7 @@ interface AuthFormProps {
 const AuthForm = ({ title, fields, buttonText, onSubmit }: AuthFormProps) => {
     const [formData, setFormData] = useState<Record<string, string>>({});
     const [focusedField, setFocusedField] = useState<string | null>(null);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });

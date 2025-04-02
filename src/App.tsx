@@ -5,7 +5,7 @@ import Timer from './Timer';
 import Clander from './clander';
 // import TodoList from './TodoList';
 import Login from './login/Login';
-import Register from './login/register';
+import Register from './login/Register';
 import ForgotPassword from './login/ForgotPassword';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
@@ -45,7 +45,7 @@ const Layout = () => {
       <BottomNavigation
         showLabels
         value={getNavValue()}
-        onChange={(event, newValue) => {
+        onChange={(_, newValue) => {
           switch (newValue) {
             case 0:
               navigate('/timer');
