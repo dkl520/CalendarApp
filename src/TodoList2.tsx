@@ -20,10 +20,11 @@ const Dialog = ({ open, onClose, children }: { open: boolean; onClose: () => voi
 // Define the form data interface (same as in the component)
 interface FormData {
   id: string;
-  title: string;
-  time: string; // Store date-time as a string
-  description: string;
-  frequency: string;
+  taskName: string;
+  dueDate: string; // Store date-time as a string
+  taskDescription: string;
+  completed: boolean;
+  // frequency: string;
 }
 
 
@@ -39,17 +40,19 @@ const TodoList: React.FC = () => {
   const [formItems, setFormItems] = useState<FormData[]>([
     {
       id: uuidv4(),
-      title: 'Daily Standup',
-      time: '2023-04-01T09:00', // ISO format date-time string
-      description: 'Daily team progress update',
-      frequency: 'daily'
+      taskName: 'Daily Standup',
+      dueDate: '2023-04-01T09:00', // ISO format date-time string
+      taskDescription: 'Daily team progress update',
+      completed: false,
+      // frequency: 'daily'
     },
     {
       id: uuidv4(),
-      title: 'Project Weekly Report',
-      time: '2023-04-07T15:00',
-      description: 'Weekly project summary',
-      frequency: 'weekly'
+      taskName: 'Daily Standup',
+      dueDate: '2023-04-01T09:00', // ISO format date-time string
+      taskDescription: 'Daily team progress update',
+      completed: false,
+      // frequency: 'daily'
     }
   ]);
 
@@ -57,10 +60,12 @@ const TodoList: React.FC = () => {
   // const [formItems, setFormItems] = useState<FormData[]>([]);
   const [newItem, setNewItem] = useState<FormData>({
     id: crypto.randomUUID(),
-    title: '',
-    time: '',
-    description: '',
-    frequency: 'daily'
+    taskName: '',
+    dueDate: '',
+    // userId
+    taskDescription: '',
+    completed: false,
+    // frequency: 'daily'
   });
 
 
@@ -69,10 +74,12 @@ const TodoList: React.FC = () => {
     setIsOpen(false);
     setNewItem({
       id: crypto.randomUUID(),
-      title: '',
-      time: '',
-      description: '',
-      frequency: 'daily'
+      taskName: '',
+      dueDate: '',
+      // userId
+      taskDescription: '',
+      completed: false,
+      // frequency: 'daily'
     });
   };
 
@@ -128,30 +135,30 @@ const TodoList: React.FC = () => {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Title</label>
+            <label className="block text-sm font-medium text-gray-700">taskName</label>
             <input
               type="text"
-              value={newItem.title}
-              onChange={handleChange('title')}
+              value={newItem.taskName}
+              onChange={handleChange('taskName')}
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Time</label>
+            <label className="block text-sm font-medium text-gray-700">dueDate</label>
             <input
               type="datetime-local"
-              value={newItem.time}
-              onChange={handleChange('time')}
+              value={newItem.dueDate}
+              onChange={handleChange('dueDate')}
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <label className="block text-sm font-medium text-gray-700">taskDescription</label>
             <textarea
-              value={newItem.description}
-              onChange={handleChange('description')}
+              value={newItem.taskDescription}
+              onChange={handleChange('taskDescription')}
               rows={3}
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
             />

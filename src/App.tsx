@@ -12,7 +12,7 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import RestoreIcon from '@mui/icons-material/Restore';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-
+import ConfirmEmail from './login/ConfirmEmail';
 import TodoList from './TodoList2';
 // 创建一个带有底部导航的布局组件
 const Layout = () => {
@@ -39,6 +39,7 @@ const Layout = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
+        <Route path="/confirm-email" element={<ConfirmEmail />} />
         {/* <Route path="/forgotpassword" element={<ForgotPassword />} /> */}
       </Routes>
 

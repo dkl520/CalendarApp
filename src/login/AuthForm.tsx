@@ -20,8 +20,11 @@ const AuthForm = ({ title, fields, buttonText, onSubmit }: AuthFormProps) => {
     };
 
     const handleSubmit = (e: React.FormEvent) => {
+        
         e.preventDefault();
         onSubmit(formData);
+        e.preventDefault();
+        
     };
 
     return (
