@@ -17,13 +17,9 @@ const Login = () => {
       const { accessToken, refreshToken } = response.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-      // 获取用户信息
-      try {
-        const userProfileResponse = await authService.getUserProfile();
-        localStorage.setItem("userProfile", JSON.stringify(userProfileResponse.data));
-      } catch (profileError) {
-        console.error("获取用户信息失败:", profileError);
-      }
+      const userProfileResponse = await authService.getUserProfile();
+      localStorage.setItem("userProfile", JSON.stringify(userProfileResponse.data));
+      
       // 这里可以添加登录成功后的跳转逻辑
       navigate("/");
 

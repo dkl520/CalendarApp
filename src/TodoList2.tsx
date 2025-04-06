@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Typography, Button, Box } from '@mui/material';
 import FormAccordionList from './FormAccordionList';
 import { taskService } from './services/taskService';
-import { v4 as uuidv4 } from 'uuid';
-
+import { Task, User } from './styles/types';
 const Dialog = ({ open, onClose, children }: { open: boolean; onClose: () => void; children: React.ReactNode }) => {
   return (
     <div className={`fixed inset-0 z-50 ${open ? 'block' : 'hidden'}`}>
@@ -17,33 +16,14 @@ const Dialog = ({ open, onClose, children }: { open: boolean; onClose: () => voi
   );
 };
 
-// 定义Task接口
-interface Task {
-  taskId?: string | number;
-  taskName: string;
-  dueDate: string;
-  userId: number;
-  taskDescription: string;
-  completed: boolean;
-}
-interface User {
-  id: number;
-  role: string;
-  enabled: boolean;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  createdAt: string;
-  updatedAt: string;
-  username: string;
-}
+
 const frequencyOptions = [
   { value: 'daily', label: 'Daily' },
   { value: 'weekly', label: 'Weekly' },
   { value: 'monthly', label: 'Monthly' },
   { value: 'yearly', label: 'Yearly' }
 ];
+
 
 const TodoList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -54,8 +34,10 @@ const TodoList: React.FC = () => {
   const [newTask, setNewTask] = useState<Task>({
     taskName: '',
     dueDate: new Date().toISOString(),
-    userId: -1,  // 这里需要替换为实际的用户ID
     taskDescription: '',
+    user: {
+      "id": 1
+    },
     completed: false
   });
 
@@ -67,7 +49,9 @@ const TodoList: React.FC = () => {
       if (!user || !user.id) {
         throw new Error('User ID is not available.');
       }
+
       const response = await taskService.getUserTasks(user.id);
+      debugger
       setTasks(response.data);
     } catch (error) {
       setError('获取任务失败');
@@ -79,6 +63,7 @@ const TodoList: React.FC = () => {
 
   // 添加新任务
   const handleSave = async () => {
+
     debugger
     try {
 
@@ -100,7 +85,7 @@ const TodoList: React.FC = () => {
 
   // 删除任务
   const handleDeleteTask = async (taskId: string | number) => {
-    debugger
+
     try {
       await taskService.deleteTask(Number(taskId));
       fetchTasks();

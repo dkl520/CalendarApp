@@ -1,12 +1,6 @@
 import axiosInstance from './axiosConfig';
 
-interface Task {
-  taskName: string;
-  dueDate: string;
-  userId: number;
-  taskDescription: string;
-  completed: boolean;
-}
+import { Task } from '../styles/types';
 
 export const taskService = {
   // 获取单个任务详情

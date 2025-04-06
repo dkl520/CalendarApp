@@ -69,9 +69,9 @@ const authService = {
   },
 
   // 忘记密码
-  forgotPassword: async (email: string, otp: string) => {
+  forgotPassword: async (email: string) => {
     return axiosInstance.post('/auth/forgot_password', null, {
-      params: { email, otp }
+      params: { email }
     });
   },
   getAllUsers: async () => {

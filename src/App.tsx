@@ -6,7 +6,7 @@ import Clander from './clander';
 // import TodoList from './TodoList';
 import Login from './login/Login';
 import Register from './login/Register';
-import ForgotPassword from './login/ForgotPassword';
+// import ForgotPassword from './login/ForgotPassword';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import RestoreIcon from '@mui/icons-material/Restore';
@@ -38,7 +38,7 @@ const Layout = () => {
         <Route path="/todolist" element={<TodoList />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/forgotpassword" element={<ForgotPassword />} />
+        {/* <Route path="/forgotpassword" element={<ForgotPassword />} /> */}
         <Route path="/confirm-email" element={<ConfirmEmail />} />
         {/* <Route path="/forgotpassword" element={<ForgotPassword />} /> */}
       </Routes>

@@ -13,6 +13,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem('accessToken');
+    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -54,8 +55,8 @@ axiosInstance.interceptors.response.use(
         return axios(originalRequest);
       } catch (refreshError) {
         // 刷新 token 失败，清除所有 token 并跳转到登录页
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+        // localStorage.removeItem('accessToken');
+        // localStorage.removeItem('refreshToken');
         // window.location.href = '/login';
         return Promise.reject(refreshError);
       }
