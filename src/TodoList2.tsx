@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Typography, Button, Box } from '@mui/material';
-import FormAccordionList from './FormAccordionList'; // Import the FormAccordionList component
-import { v4 as uuidv4 } from 'uuid'; // Install uuid package if needed: npm install uuid @types/uuid
+import FormAccordionList from './FormAccordionList';
+import { taskService } from './services/taskService';
+import { v4 as uuidv4 } from 'uuid';
 
 const Dialog = ({ open, onClose, children }: { open: boolean; onClose: () => void; children: React.ReactNode }) => {
   return (
@@ -16,18 +17,27 @@ const Dialog = ({ open, onClose, children }: { open: boolean; onClose: () => voi
   );
 };
 
-
-// Define the form data interface (same as in the component)
-interface FormData {
-  id: string;
+// 定义Task接口
+interface Task {
+  taskId?: string | number;
   taskName: string;
-  dueDate: string; // Store date-time as a string
+  dueDate: string;
+  userId: number;
   taskDescription: string;
   completed: boolean;
-  // frequency: string;
 }
-
-
+interface User {
+  id: number;
+  role: string;
+  enabled: boolean;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  createdAt: string;
+  updatedAt: string;
+  username: string;
+}
 const frequencyOptions = [
   { value: 'daily', label: 'Daily' },
   { value: 'weekly', label: 'Weekly' },
@@ -36,66 +46,109 @@ const frequencyOptions = [
 ];
 
 const TodoList: React.FC = () => {
-  // Initial form data
-  const [formItems, setFormItems] = useState<FormData[]>([
-    {
-      id: uuidv4(),
-      taskName: 'Daily Standup',
-      dueDate: '2023-04-01T09:00', // ISO format date-time string
-      taskDescription: 'Daily team progress update',
-      completed: false,
-      // frequency: 'daily'
-    },
-    {
-      id: uuidv4(),
-      taskName: 'Daily Standup',
-      dueDate: '2023-04-01T09:00', // ISO format date-time string
-      taskDescription: 'Daily team progress update',
-      completed: false,
-      // frequency: 'daily'
-    }
-  ]);
-
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  // const [formItems, setFormItems] = useState<FormData[]>([]);
-  const [newItem, setNewItem] = useState<FormData>({
-    id: crypto.randomUUID(),
+  const [user, setUser] = useState<User | null>(null);
+  const [newTask, setNewTask] = useState<Task>({
     taskName: '',
-    dueDate: '',
-    // userId
+    dueDate: new Date().toISOString(),
+    userId: -1,  // 这里需要替换为实际的用户ID
     taskDescription: '',
-    completed: false,
-    // frequency: 'daily'
+    completed: false
   });
 
+  // 获取任务列表
 
-  const handleSave = () => {
-    setFormItems([...formItems, newItem]);
-    setIsOpen(false);
-    setNewItem({
-      id: crypto.randomUUID(),
-      taskName: '',
-      dueDate: '',
-      // userId
-      taskDescription: '',
-      completed: false,
-      // frequency: 'daily'
-    });
+  // 这里需要替换为实际的用户ID
+  const fetchTasks = async () => {
+    try {
+      if (!user || !user.id) {
+        throw new Error('User ID is not available.');
+      }
+      const response = await taskService.getUserTasks(user.id);
+      setTasks(response.data);
+    } catch (error) {
+      setError('获取任务失败');
+      console.error('获取任务失败:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleChange = (field: keyof FormData) => (
+  // 添加新任务
+  const handleSave = async () => {
+    debugger
+    try {
+
+      await taskService.createTask(newTask);
+      setIsOpen(false);
+      // setNewTask({
+      //   taskName: '',
+      //   dueDate: new Date().toISOString(),
+      //   userId: user.id,
+      //   taskDescription: '',
+      //   completed: false
+      // });
+      fetchTasks();
+    } catch (error) {
+      setError('添加任务失败');
+      console.error('添加任务失败:', error);
+    }
+  };
+
+  // 删除任务
+  const handleDeleteTask = async (taskId: string | number) => {
+    debugger
+    try {
+      await taskService.deleteTask(Number(taskId));
+      fetchTasks();
+    } catch (error) {
+      setError('删除任务失败');
+      console.error('删除任务失败:', error);
+    }
+  };
+
+  // 完成任务
+  const handleCompleteTask = async (taskId: string | number) => {
+    try {
+      await taskService.completeTask(Number(taskId));
+      fetchTasks();
+    } catch (error) {
+      setError('更新任务状态失败');
+      console.error('更新任务状态失败:', error);
+    }
+  };
+
+  // 表单变化处理
+  const handleChange = (field: keyof Task) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    setNewItem({ ...newItem, [field]: e.target.value });
+    setNewTask({ ...newTask, [field]: e.target.value });
   };
 
-  // Handle form data changes
-  const handleFormChange = (updatedItems: FormData[]) => {
-    setFormItems(updatedItems);
+  // 处理表单数据变化
+  const handleFormChange = (updatedItems: Task[]) => {
+    setTasks(updatedItems);
     console.log('Updated form data:', updatedItems);
   };
 
+  // 初始加载
 
+  // 初始加载
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('userProfile') || '{}');
+    setUser(userData);
+    if (userData && userData.id) {
+      setNewTask(prev => ({ ...prev, userId: userData.id }));
+    }
+  }, []);
+  useEffect(() => {
+    if (user && user.id) {
+      fetchTasks();
+    }
+  }, [user]);
 
   return (
     <div className='min-h-screen bg-gradient-to-r from-purple-100 via-pink-50 to-indigo-100'>
@@ -105,9 +158,14 @@ const TodoList: React.FC = () => {
             Task Management
           </Typography>
 
+          {loading && <div>加载中...</div>}
+          {error && <div style={{ color: 'red', marginBottom: 10 }}>{error}</div>}
+
           <FormAccordionList
-            items={formItems}
-            onChange={handleFormChange}
+            items={tasks}
+            onChangeForm={handleFormChange}  // 修改这里，与   // 保留这里的 onChangeForm
+            onComplete={handleCompleteTask}
+            onDelete={handleDeleteTask}
           />
 
           <Button
@@ -118,10 +176,9 @@ const TodoList: React.FC = () => {
           >
             Add Task
           </Button>
-
-
         </Box>
       </Container>
+
       <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-medium">Add New Task</h2>
@@ -135,29 +192,29 @@ const TodoList: React.FC = () => {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">taskName</label>
+            <label className="block text-sm font-medium text-gray-700">Task Name</label>
             <input
               type="text"
-              value={newItem.taskName}
+              value={newTask.taskName}
               onChange={handleChange('taskName')}
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">dueDate</label>
+            <label className="block text-sm font-medium text-gray-700">Due Date</label>
             <input
               type="datetime-local"
-              value={newItem.dueDate}
-              onChange={handleChange('dueDate')}
+              value={newTask.dueDate.substring(0, 16)} // Format for datetime-local input
+              onChange={(e) => setNewTask({ ...newTask, dueDate: new Date(e.target.value).toISOString() })}
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">taskDescription</label>
+            <label className="block text-sm font-medium text-gray-700">Task Description</label>
             <textarea
-              value={newItem.taskDescription}
+              value={newTask.taskDescription}
               onChange={handleChange('taskDescription')}
               rows={3}
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
@@ -167,8 +224,6 @@ const TodoList: React.FC = () => {
           <div>
             <label className="block text-sm font-medium text-gray-700">Frequency</label>
             <select
-              value={newItem.frequency}
-              onChange={handleChange('frequency')}
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
             >
               {frequencyOptions.map(option => (
@@ -194,7 +249,6 @@ const TodoList: React.FC = () => {
             </button>
           </div>
         </div>
-
       </Dialog>
     </div>
   );

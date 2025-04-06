@@ -1,172 +1,110 @@
 import React, { useState } from 'react';
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Box,
-  SelectChangeEvent,
-  Stack,
-  Button
-} from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Box, IconButton } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-interface FormData {
-  id: string;
-  title: string;
-  time: string;
-  description: string;
-  frequency: string;
+// 定义接口
+interface Task {
+  taskId?: string | number;
+  taskName: string;
+  dueDate: string;
+  userId: number;
+  taskDescription: string;
+  completed: boolean;
 }
-
-const frequencyOptions = [
-  { value: 'daily', label: 'Daily' },
-  { value: 'weekly', label: 'Weekly' },
-  { value: 'monthly', label: 'Monthly' },
-  { value: 'yearly', label: 'Yearly' }
-];
-
-interface AccordionItemProps {
-  data: FormData;
-  onChange: (id: string, updatedData: Partial<FormData>) => void;
-  expanded: string | false;
-  onExpand: (panel: string) => void;
-}
-
-const AccordionItem: React.FC<AccordionItemProps> = ({ data, onChange, expanded, onExpand }) => {
-  const [isEditing, setIsEditing] = useState(false);
-
-  const handleChange = (field: keyof FormData) => (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
-  ) => {
-    onChange(data.id, { [field]: event.target.value });
-  };
-
-  return (
-    <Accordion expanded={expanded === data.id} onChange={() => onExpand(data.id)}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />} color="secondary">
-        <Typography variant="subtitle1" fontWeight={expanded === data.id ? 'bold' : 'normal'}>
-          {data.title || 'New Item'}
-        </Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Box component="form" noValidate color="secondary">
-          <Stack spacing={2}>
-            <TextField
-              fullWidth
-              color="secondary"
-              label="Title"
-              value={data.title}
-              onChange={handleChange('title')}
-              variant="outlined"
-              disabled={!isEditing}
-            />
-            <TextField
-              fullWidth
-              color="secondary"
-              label="Time"
-              type="datetime-local"
-              value={data.time || ""}
-              onChange={handleChange("time")}
-              variant="outlined"
-              InputLabelProps={{ shrink: true }}
-              disabled={!isEditing}
-              sx={{
-                "& input": {
-                  accentColor: "#8a2be2", // 这里设置为紫色（你可以换成别的颜色）
-                },
-              }}
-            />
-
-
-            <TextField
-              color="secondary"
-              fullWidth
-              label="Description"
-              value={data.description}
-              onChange={handleChange('description')}
-              multiline
-              rows={3}
-              variant="outlined"
-              disabled={!isEditing}
-            />
-            <FormControl fullWidth variant="outlined" disabled={!isEditing} color="secondary">
-              <InputLabel id={`frequency-label-${data.id}`}>Frequency</InputLabel>
-              <Select
-                labelId={`frequency-label-${data.id}`}
-                value={data.frequency}
-                onChange={handleChange('frequency')}
-                label="Frequency"
-                color="secondary"
-              >
-                {frequencyOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <Stack direction="row" spacing={2}>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => setIsEditing(true)}
-                disabled={isEditing}
-              >
-                Change
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => setIsEditing(false)}
-                disabled={!isEditing}
-              >
-                Save
-              </Button>
-            </Stack>
-          </Stack>
-        </Box>
-      </AccordionDetails>
-    </Accordion>
-  );
-};
 
 interface FormAccordionListProps {
-  items: FormData[];
-  onChange: (updatedItems: FormData[]) => void;
+  items: Task[];
+  onChangeForm: (items: Task[]) => void;  // 修改这里，与 TodoList 中一致
+  onComplete: (taskId: string | number) => void;
+  onDelete: (taskId: string | number) => void;
 }
 
-const FormAccordionList: React.FC<FormAccordionListProps> = ({ items, onChange }) => {
-  const [expanded, setExpanded] = useState<string | false>(items.length > 0 ? items[0].id : false);
-
-  const handleExpand = (panel: string) => {
-    setExpanded(expanded === panel ? false : panel);
+const FormAccordionList: React.FC<FormAccordionListProps> = ({ items, onChangeForm, onComplete, onDelete }) => {
+  const [expanded, setExpanded] = useState<string | false>(false);
+  const handleAccordionChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : false);
   };
 
-  const handleItemChange = (id: string, updatedData: Partial<FormData>) => {
-    const updatedItems = items.map(item =>
-      item.id === id ? { ...item, ...updatedData } : item
-    );
-    onChange(updatedItems);
+  const formatDate = (dateStr: string) => {
+    try {
+      return new Date(dateStr).toLocaleDateString() + ' ' + new Date(dateStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return dateStr;
+    }
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      {items.map((item) => (
-        <AccordionItem
-          key={item.id}
-          data={item}
-          onChange={handleItemChange}
-          expanded={expanded}
-          onExpand={handleExpand}
-        />
-      ))}
-    </Box>
+    <div>
+      {items.length === 0 ? (
+        <Typography variant="body1" sx={{ my: 2, textAlign: 'center', color: 'text.secondary' }}>
+          No tasks available. Add a new task to get started.
+        </Typography>
+      ) : (
+        items.map((item) => (
+          <Accordion 
+            key={item.taskId} 
+            expanded={expanded === `panel-${item.taskId}`}
+            onChange={handleAccordionChange(`panel-${item.taskId}`)}
+            sx={{ 
+              mb: 1,
+              backgroundColor: item.completed ? 'rgba(0, 0, 0, 0.04)' : 'white',
+              '&:before': { display: 'none' }
+            }}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`panel-${item.taskId}-content`}
+              id={`panel-${item.taskId}-header`}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <IconButton 
+                    size="small" 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (item.taskId) onComplete(item.taskId);
+                    }}
+                  >
+                    <CheckCircleIcon color={item.completed ? "success" : "action"} />
+                  </IconButton>
+                  <Typography
+                    sx={{
+                      ml: 1,
+                      textDecoration: item.completed ? 'line-through' : 'none',
+                      color: item.completed ? 'text.secondary' : 'text.primary'
+                    }}
+                  >
+                    {item.taskName}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ mr: 2 }}>
+                    {formatDate(item.dueDate)}
+                  </Typography>
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.preventDefault(); // 阻止默认行为
+                      e.stopPropagation();
+                      if (item.taskId) onDelete(item.taskId);
+                    }}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </Box>
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                {item.taskDescription || 'No description provided.'}
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+        ))
+      )}
+    </div>
   );
 };
 

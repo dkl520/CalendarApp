@@ -22,6 +22,21 @@ interface LoginResponse {
   refreshExpiresIn: string;
 }
 
+interface UserProfile {
+  id: number;
+  role: string;
+  enabled: boolean;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  createdAt: string;
+  updatedAt: string;
+  username: string;
+}
+
+
+
 const authService = {
   // 注册
   register: async (data: RegisterData) => {
@@ -58,6 +73,34 @@ const authService = {
     return axiosInstance.post('/auth/forgot_password', null, {
       params: { email, otp }
     });
+  },
+  getAllUsers: async () => {
+    return axios.get<UserProfile[]>('/api/v1/users');
+  },
+
+  // 更新用户信息
+  updateUser: async (userData: Partial<UserProfile>) => {
+    return axiosInstance.patch<UserProfile>('/users', userData);
+  },
+
+  // 获取指定用户信息
+  getUserById: async (userId: number) => {
+    return axiosInstance.get<UserProfile>(`/users/${userId}`);
+  },
+
+  // 删除用户
+  deleteUser: async (userId: number) => {
+    return axiosInstance.delete(`/users/${userId}`);
+  },
+
+  // 通过邮箱获取用户
+  getUserByEmail: async (email: string) => {
+    return axiosInstance.get<UserProfile>(`/users/${email}`);
+  },
+
+  // 获取当前用户档案
+  getUserProfile: async () => {
+    return axiosInstance.get<UserProfile>('/users/profile');
   }
 };
 

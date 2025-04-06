@@ -3,7 +3,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 // 创建 axios 实例
 const axiosInstance = axios.create({
   baseURL: '/api/v1',
-  timeout: 10000, // 请求超时时间：10秒
+  timeout: 20000, // 请求超时时间：10秒
   headers: {
     'Content-Type': 'application/json'
   }
@@ -56,7 +56,7 @@ axiosInstance.interceptors.response.use(
         // 刷新 token 失败，清除所有 token 并跳转到登录页
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        window.location.href = '/login';
+        // window.location.href = '/login';
         return Promise.reject(refreshError);
       }
     }
