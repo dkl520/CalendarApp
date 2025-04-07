@@ -70,7 +70,7 @@ const authService = {
 
   // 忘记密码
   forgotPassword: async (email: string) => {
-    return axiosInstance.post('/auth/forgot_password', null, {
+    return axios.post('api/v1/auth/forgot_password', null, {
       params: { email }
     });
   },
@@ -98,7 +98,13 @@ const authService = {
   deleteUser: async (userId: number) => {
     return axiosInstance.delete(`/users/${userId}`);
   },
-
+  changePassword: async (id: number, newPassword: string, confirmPassword: string) => {
+    return axiosInstance.post('/users/change_password', {
+      id,
+      confirmPassword,
+      newPassword
+    });
+  },
   // 通过邮箱获取用户
   getUserByEmail: async (email: string) => {
     return axiosInstance.get<UserProfile>(`/users/${email}`);

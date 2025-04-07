@@ -1,4 +1,5 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import authService from './authService';
 
 // 创建 axios 实例
 const axiosInstance = axios.create({
@@ -13,7 +14,6 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem('accessToken');
-    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -31,7 +31,6 @@ axiosInstance.interceptors.response.use(
   },
   async (error: AxiosError) => {
     const originalRequest = error.config;
-    
     // 如果是 401 错误（未授权），尝试使用 refresh token 获取新的 access token
     if (error.response?.status === 401 && originalRequest) {
       try {
@@ -41,16 +40,16 @@ axiosInstance.interceptors.response.use(
         }
 
         // 调用刷新 token 的接口
-        const response = await axios.post('/auth/refresh/token', {
-          refreshToken
-        });
-
+        // const response = await axios.post('/api/v1/auth/refresh/token', {
+        //   refreshToken
+        // });
+        const response = await authService.refreshToken();
+        
         const { accessToken } = response.data;
         localStorage.setItem('accessToken', accessToken);
 
         // 更新原始请求的 token
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-        
         // 重试原始请求
         return axios(originalRequest);
       } catch (refreshError) {
