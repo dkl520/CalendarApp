@@ -5,7 +5,10 @@
   padding: 2rem;
   text-align: center;
 }
-
+/* body {
+  background-color: #f5f5f5;
+  font-family: Arial, sans-serif;
+} */
 .logo {
   height: 6em;
   padding: 1.5em;

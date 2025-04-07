@@ -139,7 +139,7 @@ const TodoList: React.FC = () => {
     <div className='min-h-screen bg-gradient-to-r from-purple-100 via-pink-50 to-indigo-100'>
       <Container maxWidth="md">
         <Box sx={{ py: 4 }}>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h4" gutterBottom color='secondary'>
             Task Management
           </Typography>
 
