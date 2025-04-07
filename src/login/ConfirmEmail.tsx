@@ -21,7 +21,7 @@ const ConfirmEmail = () => {
   //     setMessage('Invalid verification link');
   //     return;
   //   }
-  //   debugger
+  //   
   //   const verifyEmail = async () => {
   //     try {
   //       await axios.get(`/api/v1/auth/account/confirm_email`, {
@@ -30,9 +30,9 @@ const ConfirmEmail = () => {
   //       setStatus('success');
   //       setMessage('Email verification successful!');
   //       // Redirect to the login page after 3 seconds
-  //       debugger
+  //       
   //       navigate('/login');
-  //       debugger
+  //       
   //       // setTimeout(() => {
   //       // }, 1000);
   //     } catch (error) {
@@ -42,7 +42,7 @@ const ConfirmEmail = () => {
   //   };
 
   //   verifyEmail();
-  //   debugger
+  //   
   //   navigate('/login');
   // }, [searchParams, navigate]);
 

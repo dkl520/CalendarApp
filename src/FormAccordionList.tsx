@@ -21,7 +21,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DescriptionIcon from '@mui/icons-material/Description';
-
+import EditIcon from '@mui/icons-material/Edit'; // 导入编辑图标
 
 import { Task } from './styles/types';
 
@@ -30,9 +30,10 @@ interface FormAccordionListProps {
   onChangeForm: (items: Task[]) => void;
   onComplete: (taskId: string | number) => void;
   onDelete: (taskId: string | number) => void;
+  onEdit: (task: Task) => void; // 添加编辑功能的回调
 }
 
-const FormAccordionList: React.FC<FormAccordionListProps> = ({ items,  onComplete, onDelete }) => {
+const FormAccordionList: React.FC<FormAccordionListProps> = ({ items, onComplete, onDelete, onEdit }) => {
   const [expanded, setExpanded] = useState<string | false>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<string | number | null>(null);
@@ -71,6 +72,13 @@ const FormAccordionList: React.FC<FormAccordionListProps> = ({ items,  onComplet
     }
     setDeleteDialogOpen(false);
     setTaskToDelete(null);
+  };
+
+  const handleEditClick = (e: React.MouseEvent, task: Task) => {
+
+    e.preventDefault();
+    e.stopPropagation();
+    onEdit(task); // 调用编辑回调
   };
 
   return (
@@ -175,6 +183,22 @@ const FormAccordionList: React.FC<FormAccordionListProps> = ({ items,  onComplet
                         fontSize: '0.75rem'
                       }}
                     />
+                    {/* 添加编辑按钮 */}
+                    <Tooltip title="Edit task">
+                      <IconButton
+                        size="small"
+                        onClick={(e) => handleEditClick(e, item)}
+                        sx={{
+                          mr: 1,
+                          '&:hover': {
+                            color: 'primary.main',
+                            backgroundColor: alpha('#1976d2', 0.1),
+                          }
+                        }}
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
                     <Tooltip title="Delete task">
                       <IconButton
                         size="small"
