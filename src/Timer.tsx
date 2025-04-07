@@ -9,7 +9,7 @@ const Timer = () => {
     let intervalId: number | null = null;
 
     if (isRunning && time > 0) {
-      intervalId = setInterval(() => {
+      intervalId = window.setInterval(() => {
         setTime((prevTime) => prevTime - 1);
       }, 1000);
     }

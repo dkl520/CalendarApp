@@ -32,12 +32,12 @@ interface FormAccordionListProps {
   onDelete: (taskId: string | number) => void;
 }
 
-const FormAccordionList: React.FC<FormAccordionListProps> = ({ items, onChangeForm, onComplete, onDelete }) => {
+const FormAccordionList: React.FC<FormAccordionListProps> = ({ items,  onComplete, onDelete }) => {
   const [expanded, setExpanded] = useState<string | false>(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<string | number | null>(null);
 
-  const handleAccordionChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+  const handleAccordionChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
   };
 

@@ -5,7 +5,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { Paper, Typography, Box, alpha } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { User } from './styles/types';
+// import { User } from './styles/types';
 import { taskService } from './services/taskService';
 import ErrorAlert from './ErrorAlert';
 
@@ -45,17 +45,17 @@ interface CalendarEvent {
 }
 
 const CalendarWithMui = () => {
-    const [currentDate] = useState(new Date());
-    const [user, setUser] = useState<User | null>(null);
+    // const [currentDate] = useState(new Date());
+    // const [user, setUser] = useState<User | null>(null);
     // Specify state type as an array of CalendarEvent
     const [events, setEvents] = useState<CalendarEvent[]>([]);
 
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
     const fetchTasks = async (userId: number) => {
         try {
-            setLoading(true);
+            // setLoading(true);
             const response = await taskService.getUserTasks(userId);
             const tasks = response.data;
             const mappedEvents = tasks.map((task: any) => ({
@@ -72,7 +72,7 @@ const CalendarWithMui = () => {
             setError(error.message || 'Failed to fetch tasks');
             console.error('Failed to fetch tasks:', error);
         } finally {
-            setLoading(false);
+            // setLoading(false);
         }
     };
 
@@ -82,7 +82,7 @@ const CalendarWithMui = () => {
             fetchTasks(userData.id);
         } else {
             setError('User not logged in.');
-            setLoading(false);
+            // setLoading(false);
         }
     }, []);
 

@@ -4,7 +4,7 @@ import FormAccordionList from './FormAccordionList';
 import { taskService } from './services/taskService';
 import { Task, User } from './styles/types';
 import ErrorAlert from './ErrorAlert';
-import MessageDisplay from './MessageDisplay';
+// import MessageDisplay from './MessageDisplay';
 
 const Dialog = ({ open, onClose, children }: { open: boolean; onClose: () => void; children: React.ReactNode }) => {
   return (
@@ -19,16 +19,16 @@ const Dialog = ({ open, onClose, children }: { open: boolean; onClose: () => voi
   );
 };
 
-const frequencyOptions = [
-  { value: 'daily', label: 'Daily' },
-  { value: 'weekly', label: 'Weekly' },
-  { value: 'monthly', label: 'Monthly' },
-  { value: 'yearly', label: 'Yearly' }
-];
+// const frequencyOptions = [
+//   { value: 'daily', label: 'Daily' },
+//   { value: 'weekly', label: 'Weekly' },
+//   { value: 'monthly', label: 'Monthly' },
+//   { value: 'yearly', label: 'Yearly' }
+// ];
 
 const TodoList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -49,15 +49,15 @@ const TodoList: React.FC = () => {
       if (!user || !user.id) {
         throw new Error('User ID is not available.');
       }
-      setLoading(true);
+      // setLoading(true);
       const response = await taskService.getUserTasks(user.id);
-      setLoading(false);
+      // setLoading(false);
       setTasks(response.data);
     } catch (error) {
       setError('Failed to fetch tasks');
       console.error('Failed to fetch tasks:', error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
