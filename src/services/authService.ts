@@ -78,6 +78,12 @@ const authService = {
     return axios.get<UserProfile[]>('/api/v1/users');
   },
 
+  confirmOTP: async (otp: string) => {
+    return axios.get(`/api/v1/auth/account/confirm_otp`, {
+      params: { otp }
+    });
+  },
+
   // 更新用户信息
   updateUser: async (userData: Partial<UserProfile>) => {
     return axiosInstance.patch<UserProfile>('/users', userData);

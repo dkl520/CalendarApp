@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter as Router, Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import Timer from './Timer';
 import Clander from './Calender';
 import Login from './login/Login';
@@ -34,7 +34,7 @@ const Layout = () => {
     <div>
       <Routes>
         <Route path="/clander" element={<Clander />} />
-        {/* <Route path="/" element={<Clander />} /> */}
+        <Route path="/" element={<Clander />} />
         <Route path="/timer" element={<Timer />} />
         <Route path="/todolist" element={<TodoList />} />
         <Route path="/register" element={<Register />} />
@@ -43,7 +43,6 @@ const Layout = () => {
         <Route path="/confirm-email" element={<ConfirmEmail />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/" element={<ResetPassword />} />
       </Routes>
 
       <BottomNavigation

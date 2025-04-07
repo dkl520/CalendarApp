@@ -6,18 +6,18 @@ const ConfirmEmail = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying');
-  const [message, setMessage] = useState('正在验证邮箱...');
+  const [message, setMessage] = useState('Verifying email...');
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const token = params.get('token');
-    console.log('当前URL:', window.location.href);
-    console.log('search字符串:', location.search);
-    console.log('token:', token);
+    console.log('Current URL:', window.location.href);
+    console.log('Search string:', location.search);
+    // console.log('Token:', token);
     
     if (!token) {
       setStatus('error');
-      setMessage('无效的验证链接');
+      setMessage('Invalid verification link');
       return;
     }
 
@@ -27,18 +27,18 @@ const ConfirmEmail = () => {
           params: { token }
         });
         setStatus('success');
-        setMessage('邮箱验证成功！');
-        // 3秒后跳转到登录页
+        setMessage('Email verification successful!');
+        // Redirect to the login page after 3 seconds
         setTimeout(() => {
           navigate('/login');
-        }, 3000);
+        }, 1000);
       } catch (error) {
         setStatus('error');
-        setMessage('验证失败，请重试或联系管理员');
+        setMessage('Verification failed, please try again or contact the administrator');
       }
     };
 
-    // verifyEmail();
+    verifyEmail();
   }, [searchParams, navigate]);
 
   return (
@@ -52,7 +52,7 @@ const ConfirmEmail = () => {
           {status === 'verifying' && (
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
           )}
-          <h2 className="text-2xl font-bold mb-4">邮箱验证</h2>
+          <h2 className="text-2xl font-bold mb-4">Email Verification</h2>
           <p>{message}</p>
         </div>
       </div>

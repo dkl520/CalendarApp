@@ -61,9 +61,6 @@ const TodoList: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return <MessageDisplay loading={loading} />;
-  }
 
 
   // Add new task
@@ -142,6 +139,7 @@ const TodoList: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-purple-100 via-pink-50 to-indigo-100">
+
       <Container maxWidth="md">
         <Box sx={{ py: 4 }}>
           <Typography variant="h4" gutterBottom color="secondary">
@@ -215,7 +213,7 @@ const TodoList: React.FC = () => {
             />
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700">Frequency</label>
             <select
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
@@ -226,7 +224,7 @@ const TodoList: React.FC = () => {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           <div className="flex justify-end gap-3 mt-6">
             <button

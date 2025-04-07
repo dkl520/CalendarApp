@@ -1,20 +1,20 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+// import history from 'connect-history-api-fallback'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
   ],
+  base: '/',
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8080', // 后端服务器地址
+        target: 'http://localhost:8080',
         changeOrigin: true,
         secure: false,
-        // rewrite: (path) => path.replace(/^\/api/, '')  // 如果后端接口不需要 /api 前缀，可以启用这行
       }
     }
   }

@@ -11,10 +11,10 @@ const ResetPassword = () => {
 
     useEffect(() => {
         const email = localStorage.getItem('resetEmail');
-        return
-        // if (!email) {
-        //   navigate('/forgot-password');
-        // }
+
+        if (!email) {
+            //   navigate('/forgot-password');
+        }
     }, [navigate]);
 
     const handleResetPassword = async (data: Record<string, string>) => {
@@ -27,9 +27,15 @@ const ResetPassword = () => {
             setLoading(true);
             setError('');
             const email = localStorage.getItem('resetEmail') || '';
-            // Uncomment and modify the following line if your service supports OTP verification:
+
+            if (!email) {
+                return
+
+            }
+            await authService.confirmOTP(data.otp);
+
             // await authService.resetPassword(email, data.otp, data.password);
-            localStorage.removeItem('resetEmail');
+
             navigate('/login');
         } catch (error: any) {
             setError(error.response?.data?.message || 'Failed to reset password');
@@ -43,11 +49,11 @@ const ResetPassword = () => {
     }
     return (
         <>
-          <ErrorAlert 
-        error={error} 
-        onClose={() => setError('')} 
-        duration={3000} 
-      />
+            <ErrorAlert
+                error={error}
+                onClose={() => setError('')}
+                duration={3000}
+            />
             <AuthForm
                 title="Reset Password"
                 fields={[

@@ -256,11 +256,11 @@ const CalendarWithMui = () => {
                         }}
                         eventContent={eventContent}
                         dayCellContent={dayCellContent}
-                        height={650}
+                        height="85vh"
                         dayMaxEvents={true}
                         nowIndicator={true}
-                        slotMinTime="07:00:00"
-                        slotMaxTime="23:00:00"  // Modify here to extend the end time
+                        slotMinTime="00:00:00"
+                        slotMaxTime="24:00:00"  // Modify here to extend the end time
                         weekends={true}
                         businessHours={{
                             daysOfWeek: [1, 2, 3, 4, 5],
