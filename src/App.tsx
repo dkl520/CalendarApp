@@ -14,6 +14,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ConfirmEmail from './login/ConfirmEmail';
 import TodoList from './TodoList2';
+import UserProfile from './login/UserProfile';
 // 创建一个带有底部导航的布局组件
 const Layout = () => {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ const Layout = () => {
         <Route path="/todolist" element={<TodoList />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<UserProfile />} />
         {/* <Route path="/forgotpassword" element={<ForgotPassword />} /> */}
         <Route path="/confirm-email" element={<ConfirmEmail />} />
         {/* <Route path="/forgotpassword" element={<ForgotPassword />} /> */}
@@ -57,6 +59,9 @@ const Layout = () => {
             case 2:
               navigate('/clander');
               break;
+            case 3:
+              navigate('/profile');
+              break;
             default:
               navigate('/');
           }
@@ -66,6 +71,7 @@ const Layout = () => {
         <BottomNavigationAction label="Timer" icon={<RestoreIcon />} />
         <BottomNavigationAction label="Todo List" icon={<FavoriteIcon />} />
         <BottomNavigationAction label="Calendar" icon={<LocationOnIcon />} />
+        <BottomNavigationAction label="Profile" icon={<LocationOnIcon />} />
       </BottomNavigation>
     </div>
   );
