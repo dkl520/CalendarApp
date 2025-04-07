@@ -1,7 +1,7 @@
 import React from 'react';
 import { HashRouter as Router, Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import Timer from './Timer';
-import Clander from './clander';
+import Clander from './Calender';
 import Login from './login/Login';
 import Register from './login/Register';
 import BottomNavigation from '@mui/material/BottomNavigation';
@@ -13,6 +13,9 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ConfirmEmail from './login/ConfirmEmail';
 import TodoList from './TodoList';
 import UserProfile from './login/UserProfile';
+import ForgotPassword from './login/ForgotPassword';
+import ResetPassword from './login/ResetPassword';
+
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -31,13 +34,16 @@ const Layout = () => {
     <div>
       <Routes>
         <Route path="/clander" element={<Clander />} />
-        <Route path="/" element={<Clander />} />
+        {/* <Route path="/" element={<Clander />} /> */}
         <Route path="/timer" element={<Timer />} />
         <Route path="/todolist" element={<TodoList />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/confirm-email" element={<ConfirmEmail />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/" element={<ResetPassword />} />
       </Routes>
 
       <BottomNavigation

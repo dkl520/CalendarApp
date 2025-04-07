@@ -2,48 +2,52 @@ import AuthForm from "../login/AuthForm";
 import authService from "../services/authService";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ErrorAlert from '../ErrorAlert';
 const Register = () => {
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
   const handleRegister = async (data: Record<string, string>) => {
-    // 验证密码确认
+    // Validate password confirmation
     if (data.password !== data.confirmPassword) {
-      setError("两次输入的密码不一致");
+      setError("Passwords do not match");
       return;
     }
 
     try {
       let fms = {
         email: data.email,
-        firstName: data.firstName, // 假设用 username 作为 firstName
-        lastName: data.lastName, // 如果需要可以添加这个字段到表单
-        phone: data.phone,     // 如果需要可以添加这个字段到表单
+        firstName: data.firstName, // Assume using username as firstName
+        lastName: data.lastName, // Add this field to the form if needed
+        phone: data.phone,       // Add this field to the form if needed
         password: data.password,
-        role: "user", // 默认角色
-        otp: "" // 如果需要验证码，可以添加这个字段到表单
-      }
+        role: "user", // Default role
+        otp: "" // Add a verification code field if needed
+      };
       await authService.register(fms);
-      // 注册成功后的处理
-      console.log("注册成功");
-      // 可以添加跳转到登录页面的逻辑
+      // Handle post-registration actions
+      console.log("Registration successful");
+      // You can add navigation logic to the login page
       navigate("/login");
-
     } catch (error: any) {
-      setError(error.response?.data?.message || "注册失败，请重试");
+      setError(error.response?.data?.message || "Registration failed, please try again");
       console.error("Registration error:", error);
     }
   };
 
   return (
     <>
-      {error && <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>}
+     <ErrorAlert 
+        error={error} 
+        onClose={() => setError('')} 
+        duration={3000} 
+      />
       <AuthForm
         title="Register"
         fields={[
           { name: "email", type: "email", placeholder: "Email" },
-          { name: "firstName", type: "text", placeholder: "firstname" },
-          { name: "lastName", type: "text", placeholder: "lastname" },
-          { name: "phone", type: "number", placeholder: "phonenum" },
+          { name: "firstName", type: "text", placeholder: "First Name" },
+          { name: "lastName", type: "text", placeholder: "Last Name" },
+          { name: "phone", type: "number", placeholder: "Phone Number" },
           { name: "password", type: "password", placeholder: "Password" },
           { name: "confirmPassword", type: "password", placeholder: "Confirm Password" },
         ]}

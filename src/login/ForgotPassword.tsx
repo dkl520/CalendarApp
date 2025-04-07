@@ -1,65 +1,51 @@
-// import { useState } from 'react';
-// import AuthForm from "./AuthForm";
-// import authService from '../services/authService';
-// import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import authService from '../services/authService';
+import AuthForm from "../login/AuthForm";
+import MessageDisplay from "../MessageDisplay";
+import ErrorAlert from "../ErrorAlert";
+const ForgotPassword = () => {
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-// const ForgotPassword = () => {
-//   const [step, setStep] = useState(1); // 1: 输入邮箱, 2: 输入验证码和新密码
-//   const [email, setEmail] = useState('');
-//   const [error, setError] = useState('');
-//   const navigate = useNavigate();
+  const handleForgotPassword = async (data: Record<string, string>) => {
+    const email = data.email;
+    try {
+      setLoading(true);
+      setError('');
+      await authService.forgotPassword(email);
+      localStorage.setItem('resetEmail', email);
+      navigate('/reset-password');
+    } catch (error: any) {
+      setError(error.response?.data?.message || 'Failed to send verification code');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-//   const handleEmailSubmit = async (data: Record<string, string>) => {
-//     try {
-//       setError('');
-//       await authService.forgotPassword(data.email, ''); // 发送验证码
-//       setEmail(data.email);
-//       setStep(2);
-//     } catch (error: any) {
-//       setStep(2);
+  if (loading) {
+    return <MessageDisplay loading={true} error={''} />;
+  }
 
-//       setError(error.response?.data?.message || '发送验证码失败');
-//     }
-//   };
+  return (
+    <>
+      {/* {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>} */}
+      <ErrorAlert 
+        error={error} 
+        onClose={() => setError('')} 
+        duration={3000} 
+      />
+      <AuthForm
+        title="Forgot Password"
+        fields={[
+          { name: "email", type: "email", placeholder: "Email Address" },
+        ]}
+        buttonText="Send Verification Code"
+        onSubmit={handleForgotPassword}
+      />
+    </>
+  );
+};
 
-//   const handleResetSubmit = async (data: Record<string, string>) => {
-//     // try {
-//     //   setError('');
-//     //   await authService.forgotPassword(email, data.otp); // 验证码验证
-//     //   // 验证成功后跳转到登录页
-//     //   navigate('/login');
-//     // } catch (error: any) {
-//     //   setError(error.response?.data?.message || '重置密码失败');
-//     // }
-//   };
-
-//   return (
-//     <div>
-//       {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
-      
-//       {step === 1 ? (
-//         <AuthForm
-//           title="找回密码"
-//           fields={[
-//             { name: "email", type: "email", placeholder: "请输入注册邮箱" }
-//           ]}
-//           buttonText="发送验证码"
-//           onSubmit={handleEmailSubmit}
-//         />
-//       ) : (
-//         <AuthForm
-//           title="重置密码"
-//           fields={[
-//             { name: "otp", type: "text", placeholder: "请输入验证码" },
-//             { name: "password", type: "password", placeholder: "请输入新密码" },
-//             { name: "confirmPassword", type: "password", placeholder: "请确认新密码" }
-//           ]}
-//           buttonText="重置密码"
-//           onSubmit={handleResetSubmit}
-//         />
-//       )}
-//     </div>
-//   );
-// };
-
-// export default ForgotPassword;
+export default ForgotPassword;

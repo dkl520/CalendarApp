@@ -82,7 +82,7 @@ const AuthForm = ({ title, fields, buttonText, onSubmit }: AuthFormProps) => {
                             </Link>
                             {" | "}
                             <Link
-                                to="/forgotpassword"
+                                to="/forgot-password"
                                 className="text-purple-600 hover:text-purple-800 mx-1"
                             >
                                 Forgot Password?

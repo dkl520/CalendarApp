@@ -2,6 +2,7 @@ import AuthForm from "../login/AuthForm";
 import authService from "../services/authService";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ErrorAlert from "../ErrorAlert";
 const Login = () => {
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
@@ -20,18 +21,22 @@ const Login = () => {
       const userProfileResponse = await authService.getUserProfile();
       localStorage.setItem("userProfile", JSON.stringify(userProfileResponse.data));
       
-      // 这里可以添加登录成功后的跳转逻辑
+      // Here you can add navigation logic after successful login
       navigate("/");
 
     } catch (error: any) {
-      setError(error.response?.data?.message || "登录失败，请重试");
+      setError(error.response?.data?.message || "Login failed, please try again");
       console.error("Login error:", error);
     }
   };
 
   return (
     <>
-      {error && <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>}
+      <ErrorAlert 
+        error={error} 
+        onClose={() => setError('')} 
+        duration={3000} 
+      />
       <AuthForm
         title="Login"
         fields={[

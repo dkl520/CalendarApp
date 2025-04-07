@@ -3,6 +3,9 @@ import { Container, Typography, Button, Box } from '@mui/material';
 import FormAccordionList from './FormAccordionList';
 import { taskService } from './services/taskService';
 import { Task, User } from './styles/types';
+import ErrorAlert from './ErrorAlert';
+import MessageDisplay from './MessageDisplay';
+
 const Dialog = ({ open, onClose, children }: { open: boolean; onClose: () => void; children: React.ReactNode }) => {
   return (
     <div className={`fixed inset-0 z-50 ${open ? 'block' : 'hidden'}`}>
@@ -16,7 +19,6 @@ const Dialog = ({ open, onClose, children }: { open: boolean; onClose: () => voi
   );
 };
 
-
 const frequencyOptions = [
   { value: 'daily', label: 'Daily' },
   { value: 'weekly', label: 'Weekly' },
@@ -24,10 +26,9 @@ const frequencyOptions = [
   { value: 'yearly', label: 'Yearly' }
 ];
 
-
 const TodoList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -36,37 +37,39 @@ const TodoList: React.FC = () => {
     dueDate: new Date().toISOString(),
     taskDescription: '',
     user: {
-      "id": 1
+      id: 1
     },
     completed: false
   });
 
-  // 获取任务列表
-
-  // 这里需要替换为实际的用户ID
+  // Fetch task list
+  // Replace with actual user ID if necessary
   const fetchTasks = async () => {
     try {
       if (!user || !user.id) {
         throw new Error('User ID is not available.');
       }
-
+      setLoading(true);
       const response = await taskService.getUserTasks(user.id);
-      debugger
+      setLoading(false);
       setTasks(response.data);
     } catch (error) {
-      setError('获取任务失败');
-      console.error('获取任务失败:', error);
+      setError('Failed to fetch tasks');
+      console.error('Failed to fetch tasks:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  // 添加新任务
+  if (loading) {
+    return <MessageDisplay loading={loading} />;
+  }
+
+
+  // Add new task
   const handleSave = async () => {
-
-    debugger
+    debugger;
     try {
-
       await taskService.createTask(newTask);
       setIsOpen(false);
       // setNewTask({
@@ -78,77 +81,81 @@ const TodoList: React.FC = () => {
       // });
       fetchTasks();
     } catch (error) {
-      setError('添加任务失败');
-      console.error('添加任务失败:', error);
+      setError('Failed to add task');
+      console.error('Failed to add task:', error);
     }
   };
 
-  // 删除任务
+  // Delete task
   const handleDeleteTask = async (taskId: string | number) => {
-
     try {
       await taskService.deleteTask(Number(taskId));
       fetchTasks();
     } catch (error) {
-      setError('删除任务失败');
-      console.error('删除任务失败:', error);
+      setError('Failed to delete task');
+      console.error('Failed to delete task:', error);
     }
   };
 
-  // 完成任务
+  // Complete task
   const handleCompleteTask = async (taskId: string | number) => {
     try {
       await taskService.completeTask(Number(taskId));
       fetchTasks();
     } catch (error) {
-      setError('更新任务状态失败');
-      console.error('更新任务状态失败:', error);
+      setError('Failed to update task status');
+      console.error('Failed to update task status:', error);
     }
   };
 
-  // 表单变化处理
+  // Handle input changes
   const handleChange = (field: keyof Task) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     setNewTask({ ...newTask, [field]: e.target.value });
   };
 
-  // 处理表单数据变化
+  // Handle form data change
   const handleFormChange = (updatedItems: Task[]) => {
     setTasks(updatedItems);
     console.log('Updated form data:', updatedItems);
   };
 
-  // 初始加载
-
-  // 初始加载
+  // Initial load
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userProfile') || '{}');
     setUser(userData);
     if (userData && userData.id) {
       setNewTask(prev => ({ ...prev, userId: userData.id }));
+    } else {
+      setError('User ID is not available.');
     }
   }, []);
+
   useEffect(() => {
     if (user && user.id) {
       fetchTasks();
     }
   }, [user]);
 
+
+
   return (
-    <div className='min-h-screen bg-gradient-to-r from-purple-100 via-pink-50 to-indigo-100'>
+    <div className="min-h-screen bg-gradient-to-r from-purple-100 via-pink-50 to-indigo-100">
       <Container maxWidth="md">
         <Box sx={{ py: 4 }}>
-          <Typography variant="h4" gutterBottom color='secondary'>
+          <Typography variant="h4" gutterBottom color="secondary">
             Task Management
           </Typography>
 
-          {loading && <div>加载中...</div>}
-          {error && <div style={{ color: 'red', marginBottom: 10 }}>{error}</div>}
-
+          <ErrorAlert
+            error={error}
+            onClose={() => setError('')}
+            duration={3000}
+          />
           <FormAccordionList
             items={tasks}
-            onChangeForm={handleFormChange}  // 修改这里，与   // 保留这里的 onChangeForm
+            onChangeForm={handleFormChange}  // Preserve the onChangeForm here
             onComplete={handleCompleteTask}
             onDelete={handleDeleteTask}
           />
@@ -191,7 +198,9 @@ const TodoList: React.FC = () => {
             <input
               type="datetime-local"
               value={newTask.dueDate.substring(0, 16)} // Format for datetime-local input
-              onChange={(e) => setNewTask({ ...newTask, dueDate: new Date(e.target.value).toISOString() })}
+              onChange={(e) =>
+                setNewTask({ ...newTask, dueDate: new Date(e.target.value).toISOString() })
+              }
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
             />
           </div>

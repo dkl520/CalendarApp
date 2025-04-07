@@ -7,18 +7,19 @@ import { Paper, Typography, Box, alpha } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { User } from './styles/types';
 import { taskService } from './services/taskService';
+import ErrorAlert from './ErrorAlert';
 
-// 创建自定义主题，以紫色为基础
+// Create a custom theme with purple as the base
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#7B1FA2', // 深紫色作为主色
+            main: '#7B1FA2', // Deep purple as primary color
             light: '#9C27B0',
             dark: '#6A1B9A',
             contrastText: '#fff',
         },
         secondary: {
-            main: '#E1BEE7', // 浅紫色作为次要色
+            main: '#E1BEE7', // Light purple as secondary color
         },
         background: {
             default: '#FAFAFA',
@@ -46,7 +47,7 @@ interface CalendarEvent {
 const CalendarWithMui = () => {
     const [currentDate] = useState(new Date());
     const [user, setUser] = useState<User | null>(null);
-    // 指定状态类型为 CalendarEvent 数组
+    // Specify state type as an array of CalendarEvent
     const [events, setEvents] = useState<CalendarEvent[]>([]);
 
     const [loading, setLoading] = useState(true);
@@ -68,8 +69,8 @@ const CalendarWithMui = () => {
             }));
             setEvents(mappedEvents);
         } catch (error: any) {
-            setError(error.message || '获取任务失败');
-            console.error('获取任务失败:', error);
+            setError(error.message || 'Failed to fetch tasks');
+            console.error('Failed to fetch tasks:', error);
         } finally {
             setLoading(false);
         }
@@ -80,23 +81,21 @@ const CalendarWithMui = () => {
         if (userData && userData.id) {
             fetchTasks(userData.id);
         } else {
-            setError('用户未登录');
+            setError('User not logged in.');
             setLoading(false);
         }
     }, []);
 
-    if (loading) {
-        return <div className="flex justify-center items-center h-screen">加载中...</div>;
-    }
+    // Uncomment the following if you want to display a loading/error message instead of the calendar
+    // if (loading || error) {
+    //     return <MessageDisplay loading={loading} error={error} />;
+    // }
 
-    if (error) {
-        return <div className="text-red-500 text-center">{error}</div>;
-    }
 
-    // 自定义渲染事件内容，展示 taskName, dueDate, taskDescription, completed 四个字段
+    // Custom render for event content, displaying taskName, dueDate, taskDescription, and completion status
     const eventContent = (eventInfo: any) => {
         const { taskDescription, completed } = eventInfo.event.extendedProps;
-        // 格式化 dueDate 显示
+        // Format dueDate for display
         const dueDate = eventInfo.event.start
             ? new Date(eventInfo.event.start).toLocaleString()
             : '';
@@ -140,7 +139,7 @@ const CalendarWithMui = () => {
         );
     };
 
-    // 自定义日期单元格渲染
+    // Custom render for day cell content
     const dayCellContent = (arg: any) => {
         return (
             <Box
@@ -173,6 +172,7 @@ const CalendarWithMui = () => {
 
     return (
         <ThemeProvider theme={theme}>
+            <ErrorAlert error={error} onClose={() => setError('')} duration={3000} />
             <Paper
                 elevation={4}
                 sx={{
@@ -186,7 +186,6 @@ const CalendarWithMui = () => {
                     },
                 }}
             >
-
                 <Box
                     sx={{
                         '.fc': {
@@ -261,7 +260,7 @@ const CalendarWithMui = () => {
                         dayMaxEvents={true}
                         nowIndicator={true}
                         slotMinTime="07:00:00"
-                        slotMaxTime="23:00:00"  // 修改这里，将结束时间延长
+                        slotMaxTime="23:00:00"  // Modify here to extend the end time
                         weekends={true}
                         businessHours={{
                             daysOfWeek: [1, 2, 3, 4, 5],
@@ -287,7 +286,6 @@ const CalendarWithMui = () => {
                             },
                         }}
                     />
-
                 </Box>
             </Paper>
         </ThemeProvider>
